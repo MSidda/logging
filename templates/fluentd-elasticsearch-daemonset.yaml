@@ -69,8 +69,8 @@ spec:
             value: "http"
           - name: FLUENTD_SYSTEMD_CONF
             value: disable
-          - name: FLUENTD_ARGS
-            value: --no-supervisor -q
+          # - name: FLUENTD_ARGS
+          #   value: --no-supervisor -q
         {{- with .Values.fluentdElasticsearch.resources }} 
         resources:
 {{ toYaml . | indent 10 }}             
