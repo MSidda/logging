@@ -39,22 +39,23 @@ subjects:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ .Values.fluentdElasticsearch.name }}
+  name: fluentd
   labels:
-    app: {{ .Values.fluentdElasticsearch.name }}
+    app: fluentd
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.fluentdElasticsearch.name }}
+      app: fluentd
   template:
     metadata:
       labels:
-        app: {{ .Values.fluentdElasticsearch.name }}
+        app: fluentd
     spec:
-      serviceAccount: {{ .Values.fluentdElasticsearch.name }}
-      serviceAccountName: {{ .Values.fluentdElasticsearch.name }}
+      serviceAccount: fluentd
+      serviceAccountName: fluentd
       tolerations:
-{{ toYaml . | indent 6 }}
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       containers:
       - name: fluentd
         image: fluent/fluentd-kubernetes-daemonset:v1.4.2-debian-elasticsearch-1.1
