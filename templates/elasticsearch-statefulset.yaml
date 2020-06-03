@@ -4,7 +4,7 @@ metadata:
   name: es-cluster
 spec:
   serviceName: elasticsearch
-  replicas: {{ .values.elasticsearch.replicaCount }}
+  replicas: {{ .Values.elasticsearch.replicaCount }}
   selector:
     matchLabels:
       app: elasticsearch
