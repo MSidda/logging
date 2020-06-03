@@ -71,12 +71,15 @@ spec:
             value: disable
           - name: FLUENTD_ARGS
             value: --no-supervisor -q
+        {{- with .Values.fluentdElasticsearch.resources }} 
         resources:
+{{ toYaml . | indent 10 }}             
           limits:
             memory: 512Mi
           requests:
             cpu: 100m
             memory: 200Mi
+        {{- end }}
         volumeMounts:
         - name: varlog
           mountPath: /var/log
