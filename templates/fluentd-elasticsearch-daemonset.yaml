@@ -53,9 +53,10 @@ spec:
     spec:
       serviceAccount: fluentd
       serviceAccountName: fluentd
+      {{- with .Values.elasticsearch.tolerations }}
       tolerations:
-{{ toYaml . | indent 6 }}
-
+{{ toYaml . | indent 8 }}
+      {{- end }}
       containers:
       - name: fluentd
         image: fluent/fluentd-kubernetes-daemonset:v1.4.2-debian-elasticsearch-1.1
