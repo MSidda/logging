@@ -35,7 +35,7 @@ kibana:
 elasticsearch:
   name: elasticsearch
   storageClassname: storage-volume
-  replicaCount: 1
+  replicaCount: 3
   image:
     repository: docker.elastic.co/elasticsearch/elasticsearch
     tag: 7.2.0
