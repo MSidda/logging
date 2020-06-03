@@ -54,6 +54,7 @@ elasticsearch:
 #--------------------------------------------------------
 fluentdElasticsearch:
   name: fluentd
+  namespace: logging
   image:
     repository:  fluent/fluentd-kubernetes-daemonset
     tag: v1.4.2-debian-elasticsearch-1.1
