@@ -1,29 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kibana
+  name: {{ .Values.kibana.name }}
   labels:
-    app: kibana
+    app: {{ .Values.kibana.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.kibana.replicaCount }}
   selector:
     matchLabels:
-      app: kibana
+      app: {{ .Values.kibana.name }}
   template:
     metadata:
       labels:
-        app: kibana
+        app: {{ .Values.kibana.name }}
     spec:
       containers:
-      - name: kibana
-        image: docker.elastic.co/kibana/kibana:7.2.0
+      - name: {{ .Values.kibana.name }}
+        image: {{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}
         resources:
-          limits:
-            cpu: 1000m
-          requests:
-            cpu: 100m
+{{ toYaml .Values.kibana.resources | indent 10 }}
         env:
           - name: ELASTICSEARCH_URL
-            value: http://elasticsearch:9200
+            value: http://{{ .Values.elasticsearch.name}}:{{ .Values.elasticsearch.service.port}}
         ports:
-        - containerPort: 5601
+        - containerPort: {{ .Values.kibana.service.port }}

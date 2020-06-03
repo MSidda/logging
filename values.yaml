@@ -34,6 +34,7 @@ kibana:
 #--------------------------------------------------------
 elasticsearch:
   name: elasticsearch
+  storageClassname: storage-volume
   replicaCount: 1
   image:
     repository: docker.elastic.co/elasticsearch/elasticsearch

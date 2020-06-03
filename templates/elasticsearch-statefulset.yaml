@@ -16,8 +16,8 @@ spec:
       containers:
       - name: {{ .Values.elasticsearch.name }}
         image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
-        resources:
-{{ toYaml .Values.elasticsearch.resources | indent 12 }}
+        resources:          
+{{ toYaml .Values.elasticsearch.resources | indent 10 }}
         ports:
         - containerPort: 9200
           name: rest
@@ -67,7 +67,7 @@ spec:
         app: {{ .Values.elasticsearch.name }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: storage-volume
+      storageClassName: {{ .Values.elasticsearch.storageClassname }}
       resources:
         requests:
           storage: 1Gi
