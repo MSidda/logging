@@ -42,6 +42,7 @@ elasticsearch:
   service:
     type: ClusterIP
     port: 9200
+    interport: 9300
   resources:
     limits:
       cpu: 1000m

@@ -1,15 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: elasticsearch
+  name: {{ .Values.elasticsearch.name }}
   labels:
-    app: elasticsearch
+    app: {{ .Values.elasticsearch.name }}
 spec:
   selector:
-    app: elasticsearch
+    app: {{ .Values.elasticsearch.name }}
   clusterIP: None
   ports:
-    - port: 9200
+    - port: {{ .Values.elasticsearch.service.port }}
       name: rest
-    - port: 9300
+    - port: {{ .Values.elasticsearch.service.interport }}
       name: inter-node
