@@ -71,3 +71,5 @@ fluentdElasticsearch:
     effect: NoSchedule
   affinity: {}
   dockerContainersPath: /var/lib/docker/containers
+  varlog: /var/log
+
