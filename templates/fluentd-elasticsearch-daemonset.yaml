@@ -83,18 +83,18 @@ spec:
           mountPath: /etc/fluent/config.d
         resources:
 {{ toYaml .Values.fluentdElasticsearch.resources | indent 12 }}
-    {{- with .Values.fluentdElasticsearch.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.fluentdElasticsearch.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.fluentdElasticsearch.tolerations }}
+#     {{- with .Values.fluentdElasticsearch.nodeSelector }}
+# #       nodeSelector:
+# # {{ toYaml . | indent 8 }}
+#     {{- end }}
+#     {{- with .Values.fluentdElasticsearch.affinity }}
+#       affinity:
+# {{ toYaml . | indent 8 }}
+#     {{- end }}
+#     {{- with .Values.fluentdElasticsearch.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
-    {{- end }}
+    # {{- end }}
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog
