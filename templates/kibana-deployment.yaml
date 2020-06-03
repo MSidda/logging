@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kibana
-        image: "{{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.repository }}"
+        image: "{{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}"
         resources:
           limits:
             cpu: 1000m
