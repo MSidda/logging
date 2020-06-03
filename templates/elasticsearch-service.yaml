@@ -1,18 +1,15 @@
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-  name: {{ template "fullname.elasticsearch" . }}
+  name: elasticsearch
   labels:
-    app: {{ template "name.elasticsearch" . }}
-    chart: {{ template "chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: elasticsearch
 spec:
-  type: {{ .Values.elasticsearch.service.type }}
-  ports:
-    - port: {{ .Values.elasticsearch.service.port }}
-      targetPort: db
-      protocol: TCP
   selector:
-        app: {{ template "name.elasticsearch" . }}
-        release: {{ .Release.Name }}
+    app: elasticsearch
+  clusterIP: None
+  ports:
+    - port: 9200
+      name: rest
+    - port: 9300
+      name: inter-node
