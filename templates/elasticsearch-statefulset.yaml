@@ -64,7 +64,7 @@ spec:
   - metadata:
       name: data
       labels:
-        app: elasticsearch
+        app: {{ .Values.elasticsearch.name }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: storage-volume
