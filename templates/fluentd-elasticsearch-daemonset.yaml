@@ -68,6 +68,8 @@ spec:
             value: "http"
           - name: FLUENTD_SYSTEMD_CONF
             value: disable
+          - name: FLUENTD_ARGS
+            value: --no-supervisor -q
         resources:
           limits:
             memory: 512Mi
