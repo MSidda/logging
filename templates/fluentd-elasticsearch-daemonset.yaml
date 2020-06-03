@@ -2,99 +2,84 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "fullname.fluentdElasticsearch" . }}
+  name: fluentd
   labels:
-    app: {{ template "name.fluentdElasticsearch" . }}
-    release: {{ .Release.Name }}
+    app: fluentd
 ---
-kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
-  name: {{ template "fullname.fluentdElasticsearch" . }}
+  name: fluentd
   labels:
-    app: {{ template "name.fluentdElasticsearch" . }}
-    release: {{ .Release.Name }}
+    app: fluentd
 rules:
 - apiGroups:
   - ""
   resources:
-  - "namespaces"
-  - "pods"
+  - pods
+  - namespaces
   verbs:
-  - "get"
-  - "watch"
-  - "list"
+  - get
+  - list
+  - watch
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "fullname.fluentdElasticsearch" . }}
-  labels:
-    app: {{ template "name.fluentdElasticsearch" . }}
-    release: {{ .Release.Name }}
-subjects:
-- kind: ServiceAccount
-  name: {{ template "fullname.fluentdElasticsearch" . }}
-  namespace: logging
-  apiGroup: ""
+  name: fluentd
 roleRef:
   kind: ClusterRole
-  name: {{ template "fullname.fluentdElasticsearch" . }}
-  apiGroup: ""
+  name: fluentd
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: fluentd
+  namespace: logging
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ template "fullname.fluentdElasticsearch" . }}
+  name: fluentd
   labels:
-    app: {{ template "name.fluentdElasticsearch" . }}
-    chart: {{ template "chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: fluentd
 spec:
   selector:
     matchLabels:
-      app: {{ template "name.fluentdElasticsearch" . }}
-      release: {{ .Release.Name }}
+      app: fluentd
   template:
     metadata:
       labels:
-        app: {{ template "name.fluentdElasticsearch" . }}
-        release: {{ .Release.Name }}
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
+        app: fluentd
     spec:
-      priorityClassName: system-node-critical
-      serviceAccountName: {{ template "fullname.fluentdElasticsearch" . }}
+      serviceAccount: fluentd
+      serviceAccountName: fluentd
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       containers:
-      - name: {{ template "fullname.fluentdElasticsearch" . }}
-        image: "{{ .Values.fluentdElasticsearch.image.repository }}:{{ .Values.fluentdElasticsearch.image.tag }}"
-        imagePullPolicy: {{ .Values.fluentdElasticsearch.image.pullPolicy }}
+      - name: fluentd
+        image: fluent/fluentd-kubernetes-daemonset:v1.4.2-debian-elasticsearch-1.1
         env:
-        - name: FLUENTD_ARGS
-          value: --no-supervisor -q
+          - name:  FLUENT_ELASTICSEARCH_HOST
+            value: "elasticsearch.logging.svc.cluster.local"
+          - name:  FLUENT_ELASTICSEARCH_PORT
+            value: "9200"
+          - name: FLUENT_ELASTICSEARCH_SCHEME
+            value: "http"
+          - name: FLUENTD_SYSTEMD_CONF
+            value: disable
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
         volumeMounts:
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
-          mountPath: {{ .Values.fluentdElasticsearch.dockerContainersPath }}
+          mountPath: /var/lib/docker/containers
           readOnly: true
-        - name: config-volume
-          mountPath: /etc/fluent/config.d
-        resources:
-{{ toYaml .Values.fluentdElasticsearch.resources | indent 12 }}
-#     {{- with .Values.fluentdElasticsearch.nodeSelector }}
-# #       nodeSelector:
-# # {{ toYaml . | indent 8 }}
-#     {{- end }}
-#     {{- with .Values.fluentdElasticsearch.affinity }}
-#       affinity:
-# {{ toYaml . | indent 8 }}
-#     {{- end }}
-#     {{- with .Values.fluentdElasticsearch.tolerations }}
-      tolerations:      
-{{ toYaml . | indent 6 }}
-    # {{- end }}
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog
@@ -102,7 +87,7 @@ spec:
           path: /var/log
       - name: varlibdockercontainers
         hostPath:
-          path: {{ .Values.fluentdElasticsearch.dockerContainersPath }}
+          path: /var/lib/docker/containers
       - name: config-volume
         configMap:
           name: {{ template "fullname.fluentdElasticsearch" . }}-config
