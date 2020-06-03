@@ -1,19 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname.kibana" . }}
+  name: kibana
   labels:
-    app: {{ template "name.kibana" . }}
-    chart: {{ template "chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: kibana
 spec:
-  type: {{ .Values.kibana.service.type }}
+  type: LoadBalancer
   ports:
-    - port: {{ .Values.kibana.service.port }}
-      targetPort: kibana-ui
-      protocol: TCP
-      name: kibana-ui
+  - port: 5601
   selector:
-    app: {{ template "name.kibana" . }}
-    release: {{ .Release.Name }}
+    app: kibana

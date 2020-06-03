@@ -1,47 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fullname.kibana" . }}
+  name: kibana
   labels:
-    app: {{ template "name.kibana" . }}
-    chart: {{ template "chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app: kibana
 spec:
-  replicas: {{ .Values.kibana.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ template "name.kibana" . }}
-      release: {{ .Release.Name }}
+      app: kibana
   template:
     metadata:
       labels:
-        app: {{ template "name.kibana" . }}
-        release: {{ .Release.Name }}
+        app: kibana
     spec:
       containers:
-        - name: {{ template "fullname.kibana" . }}
-          image: "{{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}"
-          imagePullPolicy: {{ .Values.kibana.image.pullPolicy }}
-          env:
-            - name: ELASTICSEARCH_URL
-              value: http://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.service.port }}
-          ports:
-            - name: kibana-ui
-              containerPort: 5601
-              protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: kibana-ui
-          #   initialDelaySeconds: 45
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: kibana-ui
-          #   initialDelaySeconds: 40
-          resources:
-{{ toYaml .Values.kibana.resources | indent 12 }}
-
-
-
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:7.2.0
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 100m
+        env:
+          - name: ELASTICSEARCH_URL
+            value: http://elasticsearch:9200
+        ports:
+        - containerPort: 5601
