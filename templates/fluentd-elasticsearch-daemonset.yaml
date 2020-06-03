@@ -54,8 +54,8 @@ spec:
       serviceAccount: fluentd
       serviceAccountName: fluentd
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+{{ toYaml . | indent 6 }}
+
       containers:
       - name: fluentd
         image: fluent/fluentd-kubernetes-daemonset:v1.4.2-debian-elasticsearch-1.1
