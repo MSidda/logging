@@ -16,11 +16,10 @@ spec:
       containers:
       - name: elasticsearch
         image: "{{ .Values.elasticsearch.image.repository }}:{{ .Values.elasticsearch.image.tag }}"
+      {{- with .Values.elasticsearch.resources }} 
         resources:
-            limits:
-              cpu: 1000m
-            requests:
-              cpu: 100m
+{{ toYaml . | indent 10 }}
+        {{- end }}
         ports:
         - containerPort: 9200
           name: rest
