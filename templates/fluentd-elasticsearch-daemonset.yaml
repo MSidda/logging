@@ -39,27 +39,27 @@ subjects:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: fluentd
+  name: {{ .Values.fluentdElasticsearch.name }}
   labels:
-    app: fluentd
+    app: {{ .Values.fluentdElasticsearch.name }}
 spec:
   selector:
     matchLabels:
-      app: fluentd
+      app: {{ .Values.fluentdElasticsearch.name }}
   template:
     metadata:
       labels:
-        app: fluentd
+        app: {{ .Values.fluentdElasticsearch.name }}
     spec:
-      serviceAccount: fluentd
-      serviceAccountName: fluentd
+      serviceAccount: {{ .Values.fluentdElasticsearch.name }}
+      serviceAccountName: {{ .Values.fluentdElasticsearch.name }}
       {{- with .Values.fluentdElasticsearch.tolerations }}
       tolerations:
 {{ toYaml . | indent 6 }}
       {{- end }}
       containers:
-      - name: fluentd
-        image: fluent/fluentd-kubernetes-daemonset:v1.4.2-debian-elasticsearch-1.1
+      - name: {{ .Values.fluentdElasticsearch.name }}
+        image: {{ .Values.fluentdElasticsearch.image.repository }}:{{ .Values.fluentdElasticsearch.image.tag }}
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
             value: "elasticsearch.logging.svc.cluster.local"
