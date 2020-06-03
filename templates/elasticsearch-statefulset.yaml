@@ -1,25 +1,28 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "name.elasticsearch" . }}
+  name: es-cluster
 spec:
-  serviceName: {{ template "name.elasticsearch" . }}
+  serviceName: elasticsearch
   replicas: 3
   selector:
     matchLabels:
-      app: {{ template "name.elasticsearch" . }}
+      app: elasticsearch
   template:
     metadata:
       labels:
-        app: {{ template "name.elasticsearch" . }}
+        app: elasticsearch
     spec:
       containers:
-      - name: {{ template "name.elasticsearch" . }}
-        image: "{{ .Values.elasticsearch.image.repository }}:{{ .Values.elasticsearch.image.tag }}"
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
         resources:
-{{ toYaml .Values.elasticsearch.resources | indent 12 }}
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
         ports:
-        - containerPort: {{ .Values.elasticsearch.service.port }}
+        - containerPort: 9200
           name: rest
           protocol: TCP
         - containerPort: 9300
