@@ -28,8 +28,8 @@ metadata:
 type: Opaque
 data:
   # Enter base64 encoded username and password, if needed
-  PROXY_USER: "test"
-  PROXY_PASSWORD: "test123"
+  PROXY_USER: "dGVzdA=="
+  PROXY_PASSWORD: "dGVzdDEyMw=="
 
 ---
 
